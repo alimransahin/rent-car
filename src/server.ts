@@ -1,15 +1,15 @@
-import { Server } from "http";
 import app from "./app";
 import mongoose from "mongoose";
-const PORT = 5000;
-let server: Server;
+import config from "./app/config";
 
-async function bootstrap() {
+async function main() {
   try {
-    await mongoose.connect;
-  } catch (error) {}
-  server = app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`);
-  });
+    await mongoose.connect(config.database_url as string);
+    app.listen(config.port, () => {
+      console.log(`Example app listening on port ${config.port}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
-bootstrap();
+main();
