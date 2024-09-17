@@ -26,22 +26,67 @@ const deleteCarFromDB = async (id: string) => {
   const result = await Car.findOneAndUpdate({ id }, deleteInfo, { new: true });
   return result;
 };
+//
+//
+//
+//
+//
+
 const returnCarUpdateIntoDB = async (payload: any) => {
-  // console.log(payload);
   const bookingId = payload.bookingId;
-  const allBook = await Book.findById({ _id: bookingId })
-    .populate("userId")
-    .populate("carId");
+
+  // Find the booking by ID and specify the populated type for carId
+  const allBook = await Book.findById(bookingId)
+    .populate<{ carId: any }>("carId") // Ensure carId is populated with ICar type
+    .populate("userId");
+
   if (!allBook) {
     throw new Error("Booking not found");
   }
-  allBook.endTime = payload.endTime;
-  allBook.totalCost = payload.totalCost;
 
+  // Ensure the carId is populated and valid
+  if (!allBook.carId || typeof allBook.carId !== "object") {
+    throw new Error("Car details not found");
+  }
+  console.log(payload);
+  // Extract startTime and endTime (assuming they are in "HH:mm" format)
+  const startTime = allBook.startTime; // Check payload first, fallback to allBook
+  const endTime = payload.endTime;
+  console.log(startTime, endTime);
+  // Ensure startTime and endTime exist before processing
+  if (!startTime || !endTime) {
+    throw new Error("Start time or end time is missing");
+  }
+
+  // Function to convert time strings to hours
+  const convertToHours = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours + minutes / 60;
+  };
+
+  // Convert the startTime and endTime to hours
+  const startHour = convertToHours(startTime);
+  const endHour = convertToHours(endTime);
+
+  // Calculate the duration in hours
+  const duration = endHour - startHour;
+
+  // Access pricePerHour from the populated carId
+  const pricePerHour = allBook.carId.pricePerHour;
+
+  // Calculate total cost: duration (hours) * pricePerHour
+  const totalCost = duration * pricePerHour;
+
+  // Update the booking object with the new values
+  allBook.endTime = endTime; // Update the end time
+  allBook.totalCost = totalCost; // Update the total cost
+  allBook.carId.status = "available";
+  // Save the updated document back to the database
   const updatedBook = await allBook.save();
+
   return updatedBook;
-  // const result =await Book.findOneAndUpdate({id},payload,{new:})
 };
+
 export const carService = {
   createCarIntoDB,
   getAllCarFromDB,

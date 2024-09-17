@@ -5,8 +5,13 @@ import { Book } from "./book.model";
 const createBookIntoDb = async (payload: TBook) => {
   const newBook = await (
     await (await Book.create(payload)).populate("userId")
-  ).populate("carId");
+  ).populate<{ carId: any }>("carId");
 
+  if (!newBook.carId || typeof newBook.carId !== "object") {
+    throw new Error("Car details not found");
+  }
+  newBook.carId.status = "unavailable";
+  await newBook.carId.save();
   return newBook;
 };
 const getAllBookFromDB = async () => {
