@@ -34,6 +34,16 @@ const getSingleCar = catchAsync(async (req, res) => {
 });
 const updateCar = catchAsync(async (req, res) => {
   const result = await carService.updateCarIntoDB(req.params._id, req.body);
+  if (!result || (Array.isArray(result) && result.length === 0)) {
+    // If no data is found, send this response
+    return sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: "No data found",
+      data: [],
+    });
+  }
+  // If data is found, send the success response
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -43,6 +53,15 @@ const updateCar = catchAsync(async (req, res) => {
 });
 const deleteCar = catchAsync(async (req, res) => {
   const result = await carService.deleteCarFromDB(req.params._id);
+  if (!result || (Array.isArray(result) && result.length === 0)) {
+    // If no data is found, send this response
+    return sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: "No data found",
+      data: [],
+    });
+  }
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

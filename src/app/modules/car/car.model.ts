@@ -42,19 +42,22 @@ const carSchema = new Schema<TCar>(
   { timestamps: true }
 );
 
-// carSchema.pre("save", async function (next) {
-//   const user = this;
-//   user.password = await bcrypt.hash(
-//     user.password,
-//     Number(config.bcrypt_salt_rounds)
-//   );
-
-//   next();
-// });
-// userSchema.post("save", function (doc, next) {
-//   doc.password = "";
-//   next();
-// });
+carSchema.pre("find", async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+carSchema.pre("findOne", async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+carSchema.pre("findOneAndUpdate", async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+carSchema.pre("findOneAndDelete", async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
 export const Car = model<TCar>("car", carSchema);
 // export const UserSignIn = model<TUserSignIn>("user", userSignInSchema);
