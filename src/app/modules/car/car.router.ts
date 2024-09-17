@@ -11,7 +11,12 @@ router.post(
   carController.createCar
 );
 router.get("/", carController.getAllCar);
-router.get("/:id", carController.getSingleCar);
+
+router.put(
+  "/return",
+  // validateRequest(carValidation.returnValidationSchema),
+  carController.returnCarUpdate
+);
 router.put(
   "/:id",
   validateRequest(carValidation.updateCarValidationSchema),

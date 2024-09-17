@@ -1,3 +1,4 @@
+import { Book } from "../book/book.model";
 import { TCar } from "./car.interface";
 import { Car } from "./car.model";
 
@@ -25,10 +26,27 @@ const deleteCarFromDB = async (id: string) => {
   const result = await Car.findOneAndUpdate({ id }, deleteInfo, { new: true });
   return result;
 };
+const returnCarUpdateIntoDB = async (payload: any) => {
+  // console.log(payload);
+  const bookingId = payload.bookingId;
+  const allBook = await Book.findById({ _id: bookingId })
+    .populate("userId")
+    .populate("carId");
+  if (!allBook) {
+    throw new Error("Booking not found");
+  }
+  allBook.endTime = payload.endTime;
+  allBook.totalCost = payload.totalCost;
+
+  const updatedBook = await allBook.save();
+  return updatedBook;
+  // const result =await Book.findOneAndUpdate({id},payload,{new:})
+};
 export const carService = {
   createCarIntoDB,
   getAllCarFromDB,
   getSingleCarFromDB,
   updateCarIntoDB,
   deleteCarFromDB,
+  returnCarUpdateIntoDB,
 };

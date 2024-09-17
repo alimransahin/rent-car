@@ -3,6 +3,8 @@ import { TBook } from "./book.interface";
 
 const bookSchema = new Schema<TBook>(
   {
+    userId: { type: Schema.Types.ObjectId, ref: "user", required: true },
+    carId: { type: Schema.Types.ObjectId, ref: "car", required: true },
     date: {
       type: Date,
       required: true,
@@ -30,6 +32,10 @@ const bookSchema = new Schema<TBook>(
         message: (props) =>
           `${props.value} is not a valid time format! Use HH:MM.`,
       },
+    },
+    totalCost: {
+      type: Number,
+      default: 0,
     },
   },
   {
