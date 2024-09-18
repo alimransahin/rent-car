@@ -1,9 +1,10 @@
 import bcrypt from "bcrypt";
 
-export const isPasswordMAtched = (
-  planePassword: string,
+export const isPasswordMAtched = async (
+  plainPassword: string,
   hashedPassword: string
-) => {
-  const isMatched = bcrypt.compare(planePassword, hashedPassword);
+): Promise<boolean> => {
+  const isMatched = await bcrypt.compare(plainPassword, hashedPassword);
+  console.log(plainPassword, hashedPassword, isMatched);
   return isMatched;
 };

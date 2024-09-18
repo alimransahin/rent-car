@@ -1,3 +1,5 @@
+import httpStatus from "http-status";
+import AppError from "../../errors/AppError";
 import { Book } from "../book/book.model";
 import { TCar } from "./car.interface";
 import { Car } from "./car.model";
@@ -41,12 +43,12 @@ const returnCarUpdateIntoDB = async (payload: any) => {
     .populate("userId");
 
   if (!allBook) {
-    throw new Error("Booking not found");
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
   }
 
   // Ensure the carId is populated and valid
   if (!allBook.carId || typeof allBook.carId !== "object") {
-    throw new Error("Car details not found");
+    throw new AppError(httpStatus.NOT_FOUND, "Car details not found");
   }
   console.log(payload);
   // Extract startTime and endTime (assuming they are in "HH:mm" format)
@@ -55,7 +57,10 @@ const returnCarUpdateIntoDB = async (payload: any) => {
   console.log(startTime, endTime);
   // Ensure startTime and endTime exist before processing
   if (!startTime || !endTime) {
-    throw new Error("Start time or end time is missing");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Start time or end time is missing"
+    );
   }
 
   // Function to convert time strings to hours
