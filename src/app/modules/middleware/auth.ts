@@ -9,12 +9,12 @@ import { User } from "../user/user.model";
 
 export const auth = (...roles: (keyof typeof user_role)[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const myToken = req.headers.authorization;
+    const myToken = req.headers.authorization?.split(" ")[1];
 
     if (!myToken) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
-        "You have no permission to access this route. Please Sign In First!"
+        "You have no access to this route"
       );
     }
     const verifiedToken = jwt.verify(
@@ -29,7 +29,7 @@ export const auth = (...roles: (keyof typeof user_role)[]) => {
     if (!roles.includes(role)) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
-        "You have no permission to access this route"
+        "You have no access to this route"
       );
     }
     next();

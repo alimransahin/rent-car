@@ -38,7 +38,24 @@ const userSchema = new Schema<TUser>(
       select: 0,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.password;
+        delete ret.isDeleted;
+        return ret;
+      },
+    },
+    toObject: {
+      transform: function (doc, ret) {
+        delete ret.password;
+        delete ret.isDeleted;
+        return ret;
+      },
+    },
+  }
 );
 userSchema.pre("save", async function (next) {
   const user = this;

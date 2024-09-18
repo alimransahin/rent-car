@@ -38,9 +38,7 @@ const bookSchema = new Schema<TBook>(
       default: 0,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true, versionKey: false }
 );
 
 export const Book = model("book", bookSchema);

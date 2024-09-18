@@ -22,17 +22,11 @@ const updateCarIntoDB = async (id: string, payload: Partial<TCar>) => {
 };
 const deleteCarFromDB = async (id: string) => {
   const deleteInfo = {
-    status: " unavailable ",
     isDeleted: true,
   };
   const result = await Car.findOneAndUpdate({ id }, deleteInfo, { new: true });
   return result;
 };
-//
-//
-//
-//
-//
 
 const returnCarUpdateIntoDB = async (payload: any) => {
   const bookingId = payload.bookingId;
@@ -50,11 +44,11 @@ const returnCarUpdateIntoDB = async (payload: any) => {
   if (!allBook.carId || typeof allBook.carId !== "object") {
     throw new AppError(httpStatus.NOT_FOUND, "Car details not found");
   }
-  console.log(payload);
+
   // Extract startTime and endTime (assuming they are in "HH:mm" format)
   const startTime = allBook.startTime; // Check payload first, fallback to allBook
   const endTime = payload.endTime;
-  console.log(startTime, endTime);
+
   // Ensure startTime and endTime exist before processing
   if (!startTime || !endTime) {
     throw new AppError(
