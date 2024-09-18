@@ -11,4 +11,8 @@ const createUserIntoDB = async (password: string, payload: TUser) => {
   const newUser = await User.create(userData);
   return newUser;
 };
-export const userService = { createUserIntoDB };
+const signInUser = async (payload: any) => {
+  const result = await User.create(payload);
+  return result;
+};
+export const userService = { createUserIntoDB, signInUser };
