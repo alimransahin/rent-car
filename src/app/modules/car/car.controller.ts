@@ -49,7 +49,7 @@ const getSingleCar = catchAsync(async (req, res) => {
   });
 });
 const updateCar = catchAsync(async (req, res) => {
-  const result = await carService.updateCarIntoDB(req.params._id, req.body);
+  const result = await carService.updateCarIntoDB(req.params.id, req.body);
   if (!result || (Array.isArray(result) && result.length === 0)) {
     // If no data is found, send this response
     return sendResponse(res, {
@@ -63,7 +63,7 @@ const updateCar = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Car updated successfully",
+    message: "Car updated succeskkkkksfully",
     data: result,
   });
 });

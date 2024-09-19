@@ -13,11 +13,13 @@ const getAllCarFromDB = async () => {
   return result;
 };
 const getSingleCarFromDB = async (id: string) => {
-  const result = await Car.findOne({ id });
+  const result = await Car.findOne({ _id: id });
   return result;
 };
 const updateCarIntoDB = async (id: string, payload: Partial<TCar>) => {
-  const result = await Car.findOneAndUpdate({ id }, payload, { new: true });
+  const result = await Car.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
   return result;
 };
 const deleteCarFromDB = async (id: string) => {
